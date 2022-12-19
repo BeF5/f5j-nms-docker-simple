@@ -1,0 +1,32 @@
+version: '3'
+services:
+    clickhouse:
+        image: clickhouse/clickhouse-server:21.12.4.1
+        hostname: clickhouse
+        ports:
+        - "8123:8123"
+        - "9000:9000"
+        volumes:
+            - clickhouse:/var/lib/clickhouse
+            - ./clickhouse-config/users.xml:/etc/clickhouse-server/users.xml
+            - ./clickhouse-config/config.xml:/etc/clickhouse-server/config.xml
+    nginx-nim2:
+       image: nim:latest
+       hostname: nginx-nim2
+       ports:
+        - "443:443"
+        - "5000:5000"
+       environment:
+        ### NGINX Instance Manager environment
+        - NIM_USERNAME=admin
+        - NIM_PASSWORD=nimadmin
+        #- NIM_LICENSE="<BASE64_ENCODED_LICENSE_FILE>"
+
+        - NIM_CLICKHOUSE_ADDRESS=clickhouse
+        - NIM_CLICKHOUSE_PORT=9000
+        ### If username is not set to "default", the clickhouse-users ConfigMap in 0.clickhouse.yaml shall be updated accordingly
+        - NIM_CLICKHOUSE_USERNAME=default
+        ### If password is not set to "NGINXr0cks", the clickhouse-users ConfigMap in 0.clickhouse.yaml shall be updated accordingly
+        - NIM_CLICKHOUSE_PASSWORD=NGINXr0cks
+volumes:
+    clickhouse:  
