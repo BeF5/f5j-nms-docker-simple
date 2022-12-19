@@ -51,7 +51,6 @@ $ sudo docker ps
 CONTAINER ID   IMAGE                                    COMMAND                  CREATED          STATUS          PORTS                                                                                            NAMES
 90479d97b943   clickhouse/clickhouse-server:21.12.4.1   "/entrypoint.sh"         17 minutes ago   Up 17 minutes   0.0.0.0:8123->8123/tcp, :::8123->8123/tcp, 0.0.0.0:9000->9000/tcp, :::9000->9000/tcp, 9009/tcp   f5j-nms-docker-simple_clickhouse_1
 cbe21f598fb7   nim:latest                               "/bin/sh -c /deploym…"   17 minutes ago   Up 17 minutes   0.0.0.0:443->443/tcp, :::443->443/tcp, 0.0.0.0:5000->5000/tcp, :::5000->5000/tcp                 f5j-nms-docker-simple_nginx-nim2_1
-ubuntu@ip-10-1-1-6:~$
 
 ```
 
