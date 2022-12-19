@@ -6,6 +6,13 @@ NIMによるScanをシンプルに事項するためのDocker Composeのデプ�
 - https://github.com/fabriziofiorucci/NGINX-NMS-Docker/tree/103d357861c93a0729d32801f1f899470bb4ff32
 
 
+# 前提
+以下コンポーネントを利用します
+
+```
+docker docker-compose
+```
+
 # 手順
 ## 0. git clone
 ```
