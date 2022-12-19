@@ -3,7 +3,7 @@
 NIMによるScanをシンプルに事項するためのDocker Composeのデプロイ方法。
 
 こちらのページの元となる情報は以下です。
-- https://github.com/fabriziofiorucci/NGINX-NMS-Docker/tree/103d357861c93a0729d32801f1f899470bb4ff32
+- https://github.com/fabriziofiorucci/NGINX-NMS-Docker
 
 
 # 前提
