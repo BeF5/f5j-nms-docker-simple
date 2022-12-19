@@ -106,4 +106,4 @@ else
 	docker build --build-arg NGINX_CERT=$NGINX_CERT --build-arg NGINX_KEY=$NGINX_KEY --build-arg ADD_ACM=$ADD_ACM --build-arg ADD_SM=$ADD_SM --build-arg BUILD_WITH_SECONDSIGHT=$COUNTER -t $IMGNAME -f Dockerfile.automated .
 fi
 
-docker push $IMGNAME
+# docker push $IMGNAME
