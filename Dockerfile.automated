@@ -24,14 +24,14 @@ RUN printf "deb https://pkgs.nginx.com/nms/ubuntu `lsb_release -cs` nginx-plus\n
         wget -O /tmp/nginx_signing.key https://cs.nginx.com/static/keys/nginx_signing.key && \
         apt-key add /tmp/nginx_signing.key && \
         apt-get update && \
-        apt-get install -y nms-instance-manager && \
+        apt-get install -y nms-instance-manager=2.6.0-698150575~jammy && \
         curl -s http://hg.nginx.org/nginx.org/raw-file/tip/xml/en/security_advisories.xml > /usr/share/nms/cve.xml && \
         # Optional API Connectivity Manager
         if [ "${ADD_ACM}" = "true" ] ; then \
-        apt-get -y install nms-api-connectivity-manager; fi && \
+        apt-get -y install nms-api-connectivity-manager=1.3.1-723963411~jammy; fi && \
         # Optional Security Monitoring
         if [ "${ADD_SM}" = "true" ] ; then \
-        apt-get -y install nms-sm; fi
+        apt-get -y install nms-sm=1.0.0-697204659~jammy; fi
 
 COPY ./container/startNIM.sh /deployment/
 RUN chmod +x /deployment/startNIM.sh
