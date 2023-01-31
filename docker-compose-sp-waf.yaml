@@ -10,9 +10,9 @@ services:
             - clickhouse:/var/lib/clickhouse
             - ./clickhouse-config/users.xml:/etc/clickhouse-server/users.xml
             - ./clickhouse-config/config.xml:/etc/clickhouse-server/config.xml
-    nginx-nim2:
-       image: nim:latest
-       hostname: nginx-nim2
+    nginx-nim-sp-waf:
+       image: nim-sp-waf:latest
+       hostname: nginx-nim-sp-waf
        ports:
         - "443:443"
         - "5000:5000"

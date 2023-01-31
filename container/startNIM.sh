@@ -27,6 +27,18 @@ fi
 
 /etc/nms/scripts/basic_passwords.sh $NIM_USERNAME $NIM_PASSWORD
 
+# NGINX Management Suite version detection
+# NMS >= 2.7.0 configuration is yaml
+VERSION=`nms-core -v`
+A=${VERSION%\/*}
+B=${A##*\ }
+RELEASE=`echo $B | awk -F- '{print $2"."$3"."$4}'`
+
+echo -n "Detected NMS $RELEASE... "
+
+case $RELEASE in
+        2.4.0|2.5.0|2.5.1|2.6.0)
+                echo "legacy nms.conf"
 # Clickhouse configuration - dedicated pod
 echo -e "
 
@@ -35,6 +47,20 @@ clickhouse_address = $NIM_CLICKHOUSE_ADDRESS:$NIM_CLICKHOUSE_PORT
 clickhouse_username = '$NIM_CLICKHOUSE_USERNAME'
 clickhouse_password = '$NIM_CLICKHOUSE_PASSWORD'
 " >> /etc/nms/nms.conf
+        ;;
+        *)
+                echo "YAML nms.conf"
+# Clickhouse configuration - dedicated pod
+echo -e "
+
+# Clickhouse config
+clickhouse:
+  address: $NIM_CLICKHOUSE_ADDRESS:$NIM_CLICKHOUSE_PORT
+  username: '$NIM_CLICKHOUSE_USERNAME'
+  password: '$NIM_CLICKHOUSE_PASSWORD'
+" >> /etc/nms/nms.conf
+        ;;
+esac
 
 /etc/init.d/nginx start
 
@@ -42,9 +68,11 @@ clickhouse_password = '$NIM_CLICKHOUSE_PASSWORD'
 /bin/bash -c '`which mkdir` -p /var/lib/nms/dqlite/'
 /bin/bash -c '`which mkdir` -p /var/lib/nms/secrets/'
 /bin/bash -c '`which mkdir` -p /var/run/nms/'
+/bin/bash -c '`which mkdir` -p /var/log/nms/'
 /bin/bash -c '`which chown` -R nms:nms /var/log/nms/'
-/bin/bash -c '`which chown` -R nms:nms /var/lib/nms/'
 /bin/bash -c '`which chown` -R nms:nms /var/run/nms/'
+/bin/bash -c '`which chown` -R nms:nms /var/lib/nms/'
+/bin/bash -c '`which chmod` 0775 /var/log/nms/'
 /bin/bash -c '`which chown` -R nms:nms /etc/nms/certs/services/core'
 /bin/bash -c '`which chown` nms:nms /etc/nms/certs/services/ca.crt'
 /bin/bash -c '`which chmod` 0700 /etc/nms/certs/services/core'
@@ -66,15 +94,30 @@ clickhouse_password = '$NIM_CLICKHOUSE_PASSWORD'
 
 # Start nms ingestion - from /lib/systemd/system/nms-ingestion.service
 /bin/bash -c '`which mkdir` -p /var/run/nms/'
+/bin/bash -c '`which mkdir` -p /var/log/nms/'
 /bin/bash -c '`which chown` -R nms:nms /var/log/nms/'
+/bin/bash -c '`which chmod` 0775 /var/log/nms/'
 /bin/bash -c '`which chown` -R nms:nms /var/run/nms/'
 /usr/bin/nms-ingestion &
 
-# Start API Connectivity Manager
-#sleep 5
-#/usr/bin/nms-acm server &
+# Start nms integrations - from /lib/systemd/system/nms-integrations.service
+/bin/bash -c '`which mkdir` -p /var/lib/nms/dqlite/'
+/bin/bash -c '`which mkdir` -p /var/run/nms/'
+/bin/bash -c '`which mkdir` -p /var/log/nms/'
+/bin/bash -c '`which chown` -R nms:nms /var/lib/nms/'
+/bin/bash -c '`which chown` -R nms:nms /var/run/nms/'
+/bin/bash -c '`which chown` -R nms:nms /var/log/nms/'
+/bin/bash -c '`which chmod` 0775 /var/log/nms/'
+/bin/bash -c '`which chown` nms:nms /etc/nms/certs/services/ca.crt'
+/usr/bin/nms-integrations &
 
-sleep 5
+# Start API Connectivity Manager - from /lib/systemd/system/nms-acm.service
+if [ "${ACM_ENABLE}" = "true" ]
+then
+    sleep 5
+    /usr/bin/nms-acm server &
+    sleep 5
+fi
 
 chmod 666 /var/run/nms/*.sock
 
@@ -88,4 +131,3 @@ while [ 1 ]
 do
         sleep 60
 done
-

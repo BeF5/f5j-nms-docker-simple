@@ -10,9 +10,9 @@ services:
             - clickhouse:/var/lib/clickhouse
             - ./clickhouse-config/users.xml:/etc/clickhouse-server/users.xml
             - ./clickhouse-config/config.xml:/etc/clickhouse-server/config.xml
-    nginx-nim2:
-       image: nim:latest
-       hostname: nginx-nim2
+    nginx-nim-acm:
+       image: nim-acm:latest
+       hostname: nginx-nim-acm
        ports:
         - "443:443"
         - "5000:5000"
@@ -29,10 +29,13 @@ services:
         ### If password is not set to "NGINXr0cks", the clickhouse-users ConfigMap in 0.clickhouse.yaml shall be updated accordingly
         - NIM_CLICKHOUSE_PASSWORD=NGINXr0cks
 
+        ### ACM Enable flag
+        - ACM_ENABLE=true
+
         ### Second Sight Push mode
         - STATS_PUSH_ENABLE=false
         - STATS_PUSH_MODE=CUSTOM
-          #value: NGINX_PUSH
+          # NGINX_PUSH
         - STATS_PUSH_URL="http://127.0.0.1/callHome"
         ### Push interval in seconds
         - STATS_PUSH_INTERVAL=1800
