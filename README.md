@@ -26,22 +26,24 @@ git clone https://github.com/BeF5/f5j-nms-docker-simple.git
 $ ls
 nginx-repo.crt  nginx-repo.key
 ```
-## 2. Simple NIM のBuild
+
+# a. Docker Container の実行
+## 1. Simple NIM の Docker Image Build
 ```
 cd f5j-nms-docker-simple/docer-compose
 cp ~/nginx-repo* .
 sudo ./scripts/buildNIM.sh -C nginx-repo.crt -K nginx-repo.key -i -t nim
 ```
 
-## 3. Container Imageの登録
+## 2. Container Imageの登録
 作成されたDocker Iamageを適切なContainer Registryに登録
 
-## 4. 実行
+## 3. 実行
 ```
 sudo docker-compose -f docker-compose.yaml up -d
 ```
 
-## 5. 実行完了後のステータス
+## 4. 実行完了後のステータス
 NIMが正しく動作した場合のサンプルのステータスを示します
 
 動作するDockerイメージの状態。clickhouseと前の手順でBuildしたnimのイメージが動作します
@@ -92,4 +94,25 @@ Using openssl version 3.0.2 to update NGINX password for admin in file: /etc/nms
 [80] [INF] Server is ready
 ⇨ http server started on /var/run/nms/core.sock
 ⇨ http server started on /var/run/nms/dpm.sock
+```
+
+# b. Ansible の実行
+## 0. 事前作業
+
+予め作業ホストから対象のホストに対してSSHの接続ができること。SSH公開鍵認証が望ましい
+対象ホストにAnsibleがインストールされていること
+
+## 1. Simple NIM の Docker Image Build
+
+```
+cd ~/f5j-nms-docker-simple/ansible
+cp ~/nginx-repo* .
+ansible-playbook -i inventory/hosts -l host1 nms/nms-setup.yaml
+```
+
+コマンドの実行が完了すると以下のような出力結果となります
+
+```
+PLAY RECAP ***************************************************************************************
+10.1.1.5                  : ok=91   changed=44   unreachable=0    failed=0    skipped=50   rescued=0    ignored=0
 ```
