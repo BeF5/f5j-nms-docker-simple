@@ -1,0 +1,14 @@
+all:
+  children:
+    docker:
+      hosts:
+        10.1.1.4:
+    host1:
+      hosts:
+        10.1.1.5:
+    master:
+      hosts:
+        10.1.1.8:
+    node1:
+      hosts:
+        10.1.1.9:

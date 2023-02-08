@@ -28,7 +28,7 @@ nginx-repo.crt  nginx-repo.key
 ```
 ## 2. Simple NIM のBuild
 ```
-cd f5j-nms-docker-simple
+cd f5j-nms-docker-simple/docer-compose
 cp ~/nginx-repo* .
 sudo ./scripts/buildNIM.sh -C nginx-repo.crt -K nginx-repo.key -i -t nim
 ```

@@ -116,9 +116,9 @@ if [ "${ACM_ENABLE}" = "true" ]
 then
     sleep 5
     /usr/bin/nms-acm server &
-    sleep 5
 fi
 
+sleep 5
 chmod 666 /var/run/nms/*.sock
 
 # License activation

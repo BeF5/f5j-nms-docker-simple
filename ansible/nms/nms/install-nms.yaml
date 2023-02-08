@@ -1,0 +1,131 @@
+---
+- name: Create Directory for NGINX crt/key
+  file:
+    path: "/etc/ssl/nginx/"
+    state: directory
+    owner: "root"
+    group: "root"
+    mode: "775"
+
+- name: Copy nginx-repo.crt
+  copy:
+    src: ../../nginx-repo.crt
+    dest: /etc/ssl/nginx/
+
+- name: Copy nginx-repo.key
+  copy:
+    src: ../../nginx-repo.key
+    dest: /etc/ssl/nginx/
+
+- name: Setup for NMS install 1
+  shell: |
+    printf "deb https://pkgs.nginx.com/nms/ubuntu `lsb_release -cs` nginx-plus\n" | sudo tee /etc/apt/sources.list.d/nms.list
+  args:
+    chdir: ~/
+
+- name: Setup for NMS install 2
+  shell: |
+    sudo wget -q -O /etc/apt/apt.conf.d/90pkgs-nginx https://cs.nginx.com/static/files/90pkgs-nginx
+  args:
+    chdir: ~/
+
+- name: Setup for NMS install 3
+  shell: |
+    wget -O /tmp/nginx_signing.key https://cs.nginx.com/static/keys/nginx_signing.key
+  args:
+    chdir: ~/
+
+- name: Setup for NMS install 4
+  shell: |
+    sudo apt-key add /tmp/nginx_signing.key 
+  args:
+    chdir: ~/
+
+- name: Update All Packages
+  apt:
+    name: "*"
+    force_apt_get: yes
+    update_cache: yes
+    autoremove: yes
+    state: latest
+  register: reboot_node
+
+- name: Install nms-instance-manager
+  apt:
+    name: nms-instance-manager
+    force_apt_get: yes
+    update_cache: yes
+    state: present
+
+- name: Install nms-api-connectivity-manager
+  apt:
+    name: nms-api-connectivity-manager
+    force_apt_get: yes
+    update_cache: yes
+    state: present
+
+- name: Install nms-sm
+  apt:
+    name: nms-sm
+    force_apt_get: yes
+    update_cache: yes
+    state: present
+
+- name: Install nms-waf-compiler
+  apt:
+    name: nms-nap-compiler-v4.2.0
+    force_apt_get: yes
+    update_cache: yes
+    state: present
+
+- name: Copy nms.conf
+  copy:
+    src: ./nms.conf
+    dest: /etc/nms/
+
+- name: Start service nms, if not started
+  service:
+    name: nms
+    state: started
+
+- name: Start service nms-core, if not started
+  service:
+    name: nms-core
+    state: started
+
+- name: Start service nms-dpm, if not started
+  service:
+    name: nms-dpm
+    state: started
+
+- name: Start service nms-ingestion, if not started
+  service:
+    name: nms-ingestion
+    state: started
+
+- name: Start service nms-integrations, if not started
+  service:
+    name: nms-integrations
+    state: started
+
+- name: Start service nms-acm, if not started
+  service:
+    name: nms-acm
+    state: started
+
+- name: Copy .htpasswd for NMS
+  copy:
+    src: ./nms-htpasswd
+    dest: /etc/nms/nginx/.htpasswd
+
+- name: Start service nginx, if not started
+  service:
+    name: nginx
+    state: restarted
+
+#- name: Setup for NMS install 1
+#  shell: |
+#    nginx -s reload
+#  args:
+#    chdir: ~/
+

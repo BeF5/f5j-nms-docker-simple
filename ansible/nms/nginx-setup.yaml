@@ -1,0 +1,9 @@
+---
+- name: Setup NMS
+  hosts: all
+  collections:
+  - nginxinc.nginx_core
+  become: yes
+  tasks:
+  - import_tasks: nms/install-nplus.yaml
+
