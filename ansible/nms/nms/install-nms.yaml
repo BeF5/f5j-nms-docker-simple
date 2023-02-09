@@ -73,7 +73,7 @@
 
 - name: Install nms-waf-compiler
   apt:
-    name: nms-nap-compiler-v4.2.0
+    name: nms-nap-compiler-{{ compilerver }}
     force_apt_get: yes
     update_cache: yes
     state: present

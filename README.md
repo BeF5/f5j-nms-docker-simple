@@ -113,6 +113,6 @@ ansible-playbook -i inventory/hosts -l host1 nms/nms-setup.yaml
 コマンドの実行が完了すると以下のような出力結果となります
 
 ```
-PLAY RECAP ***************************************************************************************
-10.1.1.5                  : ok=91   changed=44   unreachable=0    failed=0    skipped=50   rescued=0    ignored=0
+PLAY RECAP ****************************************************************************************************
+10.1.1.5                   : ok=37   changed=27   unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 ```
