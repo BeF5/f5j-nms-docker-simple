@@ -27,5 +27,5 @@
   - import_tasks: common/update-ubuntu.yaml
   - import_tasks: common/install-docker.yaml
   - import_tasks: nms/install-clickhouse.yaml
-  #- import_tasks: nms/install-nplus.yaml
+  - import_tasks: nms/install-nplus.yaml
   - import_tasks: nms/install-nms.yaml
