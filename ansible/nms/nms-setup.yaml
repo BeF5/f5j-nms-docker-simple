@@ -6,20 +6,22 @@
   become: yes
 
   vars:
-    compilerver: v4.100.1
+    compilerver: v4.218.0
 
   vars_prompt:
     name: compilerver
-    prompt: “Set NAP WAF Compiler Ver. v4.100.1 (default) (NAP WAF 4.1), v4.2.0 (NAP WAF 4.0), v3.1088.2 (NAP WAF 3.12.2)”
+    prompt: “Set NAP WAF Compiler. Format:vX.X.X :(default) v4.218.0(WAF4.2), v4.100.1(WAF4.1), v4.2.0(WAF4.0), v3.1088.2(WAF3.12.2)”
     private: no
 
   tasks:
   - set_fact:
-      compilerver: v4.100.1
+      compilerver: v4.218.0
       when:
         compilerver != "v4.100.1"
         and compilerver != "v4.2.0"
         and compilerver != "v3.1088.2"
+        and compilerver != "v4.218.0"
+
 
   - debug:
       msg: ‘NAP WAF Compiler Version {{ compilerver }}’
